@@ -28,6 +28,7 @@ echo "<nodeinfo>"
 
 echo "<node>"
 infoCommand "Host" "hostname"
+infoCommand "OS release" "tail" "-n +1 /etc/*-release"
 infoCommand "Environment" "env"
 infoCommand "Filesystem mountpoints" "mount"
 infoCommand "Block devices" "lsblk"
