@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+# nodeinfo script collecting system information
+#
+# Copyright (c) 2015-2016 Christoph Niethammer <niethammer@hlrs.de>
+#
+
+function infoCommand() {
+    title=$1
+    cmd=$2
+    shift 2
+    args=$@
+    echo "<info title='$title' command='$cmd${args:+ $args}'>"
+    if ! type $cmd >/dev/null 2>/dev/null ; then
+        echo "<!-- '$cmd' not available on this system -->"
+    else
+        echo "<commandtype><![CDATA["
+        type $cmd
+        echo "]]></commandtype>"
+        echo "<commandoutput><![CDATA["
+        $cmd $args
+        echo "]]></commandoutput>"
+    fi
+    echo "</info>"
+}
+
+echo "<nodeinfo>"
+
+echo "<node>"
+infoCommand "Host" "hostname"
+infoCommand "Environment" "env"
+infoCommand "Filesystem mountpoints" "mount"
+infoCommand "Block devices" "lsblk"
+infoCommand "Filesystem usage" "df"
+infoCommand "Quota info:" "quota"
+infoCommand "PCI devices" "lspci"
+infoCommand "Topology information" "lstopo" "--of xml"
+infoCommand "lscpu" "lscpu"
+infoCommand "CPU info" "cat" "/proc/cpuinfo"
+infoCommand "Memory info" "cat" "/proc/meminfo"
+infoCommand "numactl info show" "numactl" "--show"
+infoCommand "numactl info hardware" "numactl" "--hardware"
+infoCommand "likwid-topology" "likwid-topology" "-c -C -g"
+infoCommand "Network configuration" "ip" "address show"
+infoCommand "OpenCL device info" "clinfo"
+infoCommand "NVIDIA GPU info" "nvidia-smi" "-q"
+infoCommand "running processes:" "ps" "aux"
+infoCommand "Kernel version" "uname" "-a"
+infoCommand "Kernel modules" "lsmod"
+infoCommand "Kernel messages" "dmesg"
+infoCommand "Executable format" "file" "/bin/ls"
+infoCommand "Open MPI info" "ompi_info" "--all --all --parsable"
+
+# check if we run in a job scheduling environment
+if [[ ! -z $PBS_JOBID ]] ; then
+    infoCommand "BPS jobs" "qstat" "-a"
+    infoCommand "PBS job info" "qstat" "-f $PBS_JOBID"
+    infoCommand "PBS nodes" "cat" "$PBS_NODEFILE"
+fi
+if [[ ! -z $SLURM_JOBID ]] ; then
+    infoCommand "SLURM partitions" "sinfo" "-a"
+    infoCommand "SLURM job info" "scontrol" "show -d job"
+    infoCommand "SLURM nodes" "scontrol" "show hostname $SLURM_NODELIST"
+fi
+echo "</node>"
+echo "</nodeinfo>"
+
