@@ -51,6 +51,7 @@ infoCommand "Kernel modules" "lsmod"
 infoCommand "Kernel messages" "dmesg"
 infoCommand "Executable format" "file" "/bin/ls"
 infoCommand "Open MPI info" "ompi_info" "--all --all --parsable"
+infoCommand "PAPI version" "papi_version"
 
 # check if we run in a job scheduling environment
 if [[ ! -z $PBS_JOBID ]] ; then
