@@ -52,6 +52,8 @@ infoCommand "Kernel messages" "dmesg"
 infoCommand "Executable format" "file" "/bin/ls"
 infoCommand "Open MPI info" "ompi_info" "--all --all --parsable"
 infoCommand "PAPI version" "papi_version"
+# modules command writes output to stderr so we have to redirect stderr pipe here
+infoCommand "Environment modules" "module" "avail" 2>&1
 
 # check if we run in a job scheduling environment
 if [[ ! -z $PBS_JOBID ]] ; then
