@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+#
+# nodeinfo.parser script extracting information from nodeinfo output
+#
+# Copyright (c) 2016      Christoph Niethammer <niethammer@hlrs.de>
+#
+
+import sys
+import xml.etree.ElementTree
+
+def usage(argv) :
+    print(argv[0], "FILENAME", "[infotitle]")
+
+def list_infos(root) :
+    for info in root.findall('.//info') :
+          if len(list(info)) > 0 :
+                print(info.attrib['title'])
+          else :
+                print(info.attrib['title'], '(not available)')
+
+def print_info(root, title) :
+    for info in root.findall(".//info[@title='"+title+"']") :
+        print(info.find('commandoutput').text.strip())
+
+
+def main(argv) :
+    numoptions = len(argv)
+    if numoptions < 2 :
+        usage(sys.argv)
+        exit(1)
+    nodeinfo_xml_file = argv[1]
+    action = 'list'
+    if numoptions > 2 :
+        action = 'info'
+        title = argv[2]
+
+    e = xml.etree.ElementTree.parse(nodeinfo_xml_file)
+    root = e.getroot()
+
+    if action == 'list' :
+        list_infos(root)
+    elif action == 'info' :
+        print_info(root, title)
+
+if __name__ == "__main__" :
+    main(sys.argv)
+
