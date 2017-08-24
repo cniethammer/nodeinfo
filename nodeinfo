@@ -62,12 +62,26 @@ if [[ ! -z $PBS_JOBID ]] ; then
     infoCommand "BPS jobs" "qstat" "-a"
     infoCommand "PBS job info" "qstat" "-f $PBS_JOBID"
     infoCommand "PBS nodes" "cat" "$PBS_NODEFILE"
+    NODELIST=$(cat $PBS_NODEFILE)
 fi
 if [[ ! -z $SLURM_JOBID ]] ; then
     infoCommand "SLURM partitions" "sinfo" "-a"
     infoCommand "SLURM job info" "scontrol" "show -d job"
     infoCommand "SLURM nodes" "scontrol" "show hostname $SLURM_NODELIST"
+    NODELIST=$(scontrol show hostname $SLURM_NODELIST)
 fi
 echo "</node>"
+echo ""
+
+
+if [[ ! -z $NODELIST ]] ; then
+    for node in $(echo "$NODELIST" | sort -u)
+    do
+        echo "<node name='$node'>"
+        ssh $node $0
+        echo "</node>"
+        echo ""
+    done
+fi
 echo "</nodeinfo>"
 
