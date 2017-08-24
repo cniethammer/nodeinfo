@@ -4,6 +4,12 @@
 #
 # Copyright (c) 2015-2017 Christoph Niethammer <niethammer@hlrs.de>
 #
+# Usage:  nodeinfo [recursive]
+#
+# Options:
+#   recursive: specifies, that the script shall be executed recursively
+#              on all nodes allocated from a batch system (PBS,SLURM)
+#
 
 function infoCommand() {
     title=$1
@@ -23,6 +29,14 @@ function infoCommand() {
     fi
     echo "</info>"
 }
+
+case $1 in
+recursive)
+    option=$1
+    ;;
+*)
+    ;;
+esac
 
 echo "<nodeinfo>"
 
@@ -74,14 +88,17 @@ echo "</node>"
 echo ""
 
 
-if [[ ! -z $NODELIST ]] ; then
-    for node in $(echo "$NODELIST" | sort -u)
-    do
-        echo "<node name='$node'>"
-        ssh $node $0
-        echo "</node>"
-        echo ""
-    done
+if [[ $option == "recursive" ]] ; then
+    if [[ ! -z $NODELIST ]] ; then
+        for node in $(echo "$NODELIST" | sort -u)
+        do
+            echo "<node name='$node'>"
+            ssh $node $0
+            echo "</node>"
+            echo ""
+        done
+    fi
 fi
+
 echo "</nodeinfo>"
 
