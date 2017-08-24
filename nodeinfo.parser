@@ -2,46 +2,63 @@
 #
 # nodeinfo.parser script extracting information from nodeinfo output
 #
-# Copyright (c) 2016      Christoph Niethammer <niethammer@hlrs.de>
+# Copyright (c) 2016-2017 Christoph Niethammer <niethammer@hlrs.de>
 #
 
+import argparse
 import sys
 import xml.etree.ElementTree
 
-def usage(argv) :
-    print(argv[0], "FILENAME", "[infotitle]")
-
-def list_infos(root) :
-    for info in root.findall('.//info') :
+def list_infos(root):
+    for info in root.findall('node/info') :
           if len(list(info)) > 0 :
                 print(info.attrib['title'])
           else :
                 print(info.attrib['title'], '(not available)')
 
-def print_info(root, title) :
-    for info in root.findall(".//info[@title='"+title+"']") :
+def list_nodes(root):
+    for node in root.iter("node"):
+        if node.attrib:
+            print(node.attrib['name'])
+
+def print_info(root, title):
+    for info in root.findall("node/info[@title='"+title+"']") :
         print(info.find('commandoutput').text.strip())
 
 
-def main(argv) :
-    numoptions = len(argv)
-    if numoptions < 2 :
-        usage(sys.argv)
-        exit(1)
-    nodeinfo_xml_file = argv[1]
-    action = 'list'
-    if numoptions > 2 :
-        action = 'info'
-        title = argv[2]
+def list_all(root):
+    list_nodes(root)
+    list_infos(root)
 
-    e = xml.etree.ElementTree.parse(nodeinfo_xml_file)
+def main(argv):
+    parser = argparse.ArgumentParser(
+        prog='nodeinfo parser',
+        description="Parses, extracts and searches for information from a nodeinfo file created with the nodeinfo script"
+    )
+    parser.add_argument("--nodes", help="list nodes found inside the file", action="store_true")
+    parser.add_argument("--node", help="list info for specific node")
+    parser.add_argument("--info", help="list available info", action="store_true")
+    parser.add_argument("filename", nargs=1)
+    parser.add_argument("infoname", nargs="?")
+    args = parser.parse_args()
+
+    action = "list" if not args.infoname else "show"
+
+    e = xml.etree.ElementTree.parse(args.filename[0])
     root = e.getroot()
+    if args.node:
+        root = root.find(".//node[@name='"+args.node+"']/nodeinfo")
 
-    if action == 'list' :
-        list_infos(root)
-    elif action == 'info' :
-        print_info(root, title)
+    if action == "list" :
+        if args.nodes:
+            list_nodes(root)
+        elif args.info:
+            list_infos(root)
+        else:
+            list_all(root)
+    elif action == 'show' :
+        print_info(root, args.infoname)
+
 
 if __name__ == "__main__" :
     main(sys.argv)
-
