@@ -68,6 +68,7 @@ infoCommand "Kernel messages" "dmesg"
 infoCommand "Executable format" "file" "/bin/ls"
 infoCommand "Open MPI info" "ompi_info" "--all --all --parsable"
 infoCommand "PAPI version" "papi_version"
+infoCommand "PAPI avail" "papi_avail"
 infoCommand "Score-P info" "scorep-info" "config-summary"
 # modules command writes output to stderr so we have to redirect stderr pipe here
 infoCommand "Environment modules" "module" "avail" 2>&1
