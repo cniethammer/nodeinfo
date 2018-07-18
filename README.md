@@ -8,6 +8,7 @@ it in XML format. The output can be processed and displayed using the nodeinfo.p
 ### Prerequisites
 The nodeinfo script requires
 - bash
+
 The nodeinfo.parser requires
 - python-3
 
