@@ -1,7 +1,8 @@
 # nodeinfo tools
 
 The nodeinfo script helps to collect a large set of system information outputting
-it in XML format. The output can be processed and displayed using the nodeinfo.parser.
+it in XML format. Output saved in a file can be processed and displayed using the
+nodeinfo.parser.
 
 ## Getting Started
 
@@ -29,21 +30,21 @@ Be aware, that this runs nodeinfo via ssh on every node which can take
 very long for a large number of nodes.
 
 
-To obtain a list of information included in the output run
+To obtain a list of information included in a xml output file run
 ```
 ./nodeinfo.parser nodeinfo.xml
 ```
 To display the detailed information to one of the infos use
 ```
-./nodeinfo.parser nodeinfo.xml <INFONAM>
+./nodeinfo.parser nodeinfo.xml <INFONAME>
 ```
-The get help about all options of the nodeinfo.parser run
+In order to get help about all options of the nodeinfo.parser run
 ```
 ./nodeinfo.parser --help
 ```
 
 ## Legal Info and Contact
-Copyright (c) 2015-2017 HLRS, University of Stuttgart.
+Copyright (c) 2015-2019 HLRS, University of Stuttgart.
 This software is published under the terms of the BSD license.
 
 Contact: Christoph Niethammer <niethammer@hlrs.de>
