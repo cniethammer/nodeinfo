@@ -42,7 +42,7 @@ echo "<nodeinfo>"
 
 echo "<node>"
 infoCommand "Host" "hostname"
-infoCommand "OS release" "tail" "-n +1 /etc/*-release"
+infoCommand "OS release" "cat" "/etc/os-release"
 infoCommand "Environment" "env"
 infoCommand "ulimit" "ulimit" "-a"
 infoCommand "Filesystem mountpoints" "mount"
