@@ -2,7 +2,7 @@
 #
 # nodeinfo script collecting system information
 #
-# Copyright (c) 2015-2017 Christoph Niethammer <niethammer@hlrs.de>
+# Copyright (c) 2015-2020 Christoph Niethammer <niethammer@hlrs.de>
 #
 # Usage:  nodeinfo [recursive]
 #
@@ -30,6 +30,27 @@ function infoCommand() {
     echo "</info>"
 }
 
+function infoFile() {
+    title=$1
+    cmd=$2
+    file=$3
+    echo "<info title='$title' command='$cmd $file'>"
+    if [ ! -r "$file" ] ; then
+        echo "<!-- '$file' not available on this system -->"
+    else
+        echo "<filetype><![CDATA["
+        file $file
+        echo "]]></filetype>"
+        echo "<realfiletype><![CDATA["
+        file $(realpath $file)
+        echo "]]></realfiletype>"
+        echo "<commandoutput><![CDATA["
+        $cmd "$file"
+        echo "]]></commandoutput>"
+    fi
+    echo "</info>"
+}
+
 case $1 in
 recursive)
     option=$1
@@ -42,10 +63,10 @@ echo "<nodeinfo>"
 
 echo "<node>"
 infoCommand "Host" "hostname"
-infoCommand "OS release" "cat" "/etc/os-release"
+infoFile    "OS release" "cat" "/etc/os-release"
 infoCommand "Environment" "env"
 infoCommand "ulimit" "ulimit" "-a"
-infoCommand "Kernel config" "zcat" "/proc/config.gz"
+infoFile    "Kernel config" "zcat" "/proc/config.gz"
 infoCommand "Filesystem mountpoints" "mount"
 infoCommand "Block devices" "lsblk"
 infoCommand "Filesystem usage" "df"
@@ -55,8 +76,8 @@ infoCommand "PCI devices" "lspci" "-tv"
 infoCommand "PCI device details" "lspci" "-vvv"
 infoCommand "Topology information" "lstopo" "--of xml"
 infoCommand "lscpu" "lscpu"
-infoCommand "CPU info" "cat" "/proc/cpuinfo"
-infoCommand "Memory info" "cat" "/proc/meminfo"
+infoFile    "CPU info" "cat" "/proc/cpuinfo"
+infoFile    "Memory info" "cat" "/proc/meminfo"
 infoCommand "numactl info show" "numactl" "--show"
 infoCommand "numactl info hardware" "numactl" "--hardware"
 infoCommand "likwid-topology" "likwid-topology" "-c -C -g"
