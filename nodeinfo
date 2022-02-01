@@ -2,7 +2,7 @@
 #
 # nodeinfo script collecting system information
 #
-# Copyright (c) 2015-2020 Christoph Niethammer <niethammer@hlrs.de>
+# Copyright (c) 2015-2022 Christoph Niethammer <niethammer@hlrs.de>
 #
 # Usage:  nodeinfo [recursive]
 #
@@ -51,6 +51,25 @@ function infoFile() {
     echo "</info>"
 }
 
+function infoKernelModulesInfo() {
+    echo "<info title='Kernel Module Infos' command='modinfo'>"
+    cmd="modinfo"
+    if ! type $cmd >/dev/null 2>/dev/null ; then
+        echo "<!-- '$cmd' not available on this system -->"
+    else
+        echo "<commandtype><![CDATA["
+        type $cmd
+        echo "]]></commandtype>"
+        echo "<commandoutput><![CDATA["
+        kmodules=$(cut -d ' ' -f 1 /proc/modules | tail -n +2)
+        for km in $kmodules; do
+            $cmd "$km"
+        done
+        echo "]]></commandoutput>"
+    fi
+    echo "</info>"
+}
+
 case $1 in
 recursive)
     option=$1
@@ -89,6 +108,7 @@ infoCommand "NVIDIA GPU info" "nvidia-smi" "-q"
 infoCommand "running processes:" "ps" "aux"
 infoCommand "Kernel version" "uname" "-a"
 infoCommand "Kernel modules" "lsmod"
+infoKernelModulesInfo
 infoCommand "Kernel messages" "dmesg"
 infoCommand "Executable format" "file" "/bin/ls"
 infoCommand "Open MPI info" "ompi_info" "--all --all --parsable"
