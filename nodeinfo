@@ -109,6 +109,7 @@ infoCommand "running processes:" "ps" "aux"
 infoCommand "Kernel version" "uname" "-a"
 infoCommand "Kernel modules" "lsmod"
 infoKernelModulesInfo
+infoCommand "Kernel module params" "tail" "-n+1 $(echo /sys/module/*/parameters/*)" 2>/dev/null
 infoCommand "Kernel messages" "dmesg"
 infoCommand "Executable format" "file" "/bin/ls"
 infoCommand "Open MPI info" "ompi_info" "--all --all --parsable"
