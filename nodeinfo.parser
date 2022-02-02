@@ -6,6 +6,9 @@
 #
 
 import argparse
+import bz2
+import gzip
+import os
 import sys
 import xml.etree.ElementTree
 
@@ -44,7 +47,17 @@ def main(argv):
 
     action = "list" if not args.infoname else "show"
 
-    e = xml.etree.ElementTree.parse(args.filename[0])
+    filename = args.filename[0]
+    _, ext = os.path.splitext(filename)
+    if ext == ".bz2":
+        nodeinfo_fp = bz2.open(filename, "r")
+    elif ext == ".gz":
+        nodeinfo_fp = gzip.open(filename, "rb")
+    else:
+        nodeinfo_fp = open(filename)
+
+    e = xml.etree.ElementTree.parse(nodeinfo_fp)
+    nodeinfo_fp.close()
     root = e.getroot()
     if args.node:
         root = root.find(".//node[@name='"+args.node+"']/nodeinfo")
