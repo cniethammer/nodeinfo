@@ -122,6 +122,7 @@ infoCommand "PAPI avail" "papi_avail"
 infoCommand "Score-P info" "scorep-info" "config-summary"
 # modules command writes output to stderr so we have to redirect stderr pipe here
 infoCommand "Environment modules" "module" "avail" 2>&1
+infoCommand "Lmod modules" "module" "spider" 2>&1
 
 # check if we run in a job scheduling environment
 if [[ ! -z $PBS_JOBID ]] ; then
