@@ -8,7 +8,7 @@ nodeinfo.parser.
 
 ### Prerequisites
 The nodeinfo script requires
-- bash
+- bash (the bash_completion requires GNU bash-4.0)
 
 The nodeinfo.parser requires
 - python-3
@@ -44,7 +44,7 @@ In order to get help about all options of the nodeinfo.parser run
 ```
 
 ## Legal Info and Contact
-Copyright (c) 2015-2019 HLRS, University of Stuttgart.
+Copyright (c) 2015-2022 HLRS, University of Stuttgart.
 This software is published under the terms of the BSD license.
 
 Contact: Christoph Niethammer <niethammer@hlrs.de>
