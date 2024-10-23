@@ -21,13 +21,6 @@ Run nodeinfo and store output in a file
 ```
   ./nodeinfo > nodeinfo.xml 
 ```
-In a parallel environment running under a job scheduler (SLURM,PBS) the
-nodeinfo script can collect information for all nodes of the job via
-```
-  ./nodeinfo recursive > nodeinfo.xml 
-```
-Be aware, that this runs nodeinfo via ssh on every node which can take
-very long for a large number of nodes.
 
 
 To obtain a list of information included in a xml output file run

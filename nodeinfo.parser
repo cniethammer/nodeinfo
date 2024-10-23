@@ -19,18 +19,12 @@ def list_infos(root):
           else :
                 print(info.attrib['title'], '(not available)')
 
-def list_nodes(root):
-    for node in root.iter("node"):
-        if node.attrib:
-            print(node.attrib['name'])
-
 def print_info(root, title):
     for info in root.findall("node/info[@title='"+title+"']") :
         print(info.find('commandoutput').text.strip())
 
 
 def list_all(root):
-    list_nodes(root)
     list_infos(root)
 
 def main(argv):
@@ -38,8 +32,6 @@ def main(argv):
         prog='nodeinfo parser',
         description="Parses, extracts and searches for information from a nodeinfo file created with the nodeinfo script"
     )
-    parser.add_argument("--nodes", help="list nodes found inside the file", action="store_true")
-    parser.add_argument("--node", help="list info for specific node")
     parser.add_argument("--info", help="list available info", action="store_true")
     parser.add_argument("filename", nargs=1)
     parser.add_argument("infoname", nargs="?")
@@ -59,13 +51,9 @@ def main(argv):
     e = xml.etree.ElementTree.parse(nodeinfo_fp)
     nodeinfo_fp.close()
     root = e.getroot()
-    if args.node:
-        root = root.find(".//node[@name='"+args.node+"']/nodeinfo")
 
     if action == "list" :
-        if args.nodes:
-            list_nodes(root)
-        elif args.info:
+        if args.info:
             list_infos(root)
         else:
             list_all(root)
