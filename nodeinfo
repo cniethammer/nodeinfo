@@ -69,7 +69,7 @@ function infoKernelModulesInfo() {
 
 echo "<nodeinfo>"
 
-echo "<node>"
+echo "<node hostname=\"${HOSTNAME}\">"
 infoCommand "Host" "hostname"
 infoCommand "Network interfaces" "ifconfig -a"
 infoFile    "OS release" "cat" "/etc/os-release"
