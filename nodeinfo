@@ -2,7 +2,7 @@
 #
 # nodeinfo script collecting system information
 #
-# Copyright (c) 2015-2022 Christoph Niethammer <niethammer@hlrs.de>
+# Copyright (c) 2015-2024 Christoph Niethammer <niethammer@hlrs.de>
 #
 # Usage:  nodeinfo [recursive]
 #
@@ -82,6 +82,7 @@ echo "<nodeinfo>"
 
 echo "<node>"
 infoCommand "Host" "hostname"
+infoCommand "Network interfaces" "ifconfig -a"
 infoFile    "OS release" "cat" "/etc/os-release"
 infoCommand "Environment" "env"
 infoCommand "ulimit" "ulimit" "-a"
